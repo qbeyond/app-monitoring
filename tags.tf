@@ -1,0 +1,18 @@
+locals {
+  tags = {
+    alerting = "replace"
+    test     = "test"
+  }
+}
+
+data "azurerm_subscription" "current" {
+}
+
+#Apply tags to subscription
+module "subscription_tags" {
+  source  = "qbeyond/subscription-tags/azapi"
+  version = "2.1.0"
+
+  subscription_id = data.azurerm_subscription.current.subscription_id
+  tags            = local.tags
+}

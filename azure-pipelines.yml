@@ -1,0 +1,30 @@
+trigger:
+- main
+
+variables: 
+- group: 'dev-DevOps-01'
+
+resources:
+  repositories: 
+    - repository: iacwh-template-pipelines                 # name is referenced in template, don't change this
+      type: github
+      name: qbeyond/iacwh-template-pipelines
+      endpoint: GithubServiceConnection
+      ref: "refs/tags/v1.3.0"
+
+stages:
+- template: terraform-deploy.yml@iacwh-template-pipelines  # Template reference
+  parameters:
+    repository: self                                       # if referencing this template multiple times, specify repo name
+    AzureRMServiceConnectiontfState: 'sc-azurerm-dev-DevOps-01-backend-devops-01'
+    AzureRMServiceConnection: 'sc-azurerm-dev-DevOps-01tst-devops-01'
+    storage_account_resource_group_name: 'rg-TerraformState-prd-01'
+    terraformVersion: '1.13.4'
+    storage_account_name: 'stterpcmsd1tfstate01'
+    container_name: 'dev-devopstst-01'
+    key: 'dev-devops-01.tfstate'
+    environment: 'dev-DevOps-01'
+    #backendAzureRmUseEntraIdForAuthentication: true
+    azureRmUseIdTokenGeneration : true
+    variables:
+      action_group_id: $(action_group_id)
