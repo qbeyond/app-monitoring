@@ -1,11 +1,11 @@
 locals {
   alert_thresholds = {
-    80 = 0.8
-    95 = 0.95
+    for threshold in var.fileshare_monitoring.thresholds :
+    threshold => threshold / 100
   }
 
   alert_combinations = flatten([
-    for idx, share_name in var.file_share_names : [
+    for idx, share_name in var.fileshare_monitoring.share_names : [
       for percentage, threshold_multiplier in local.alert_thresholds : {
         key            = "${idx + 1}-${percentage}"
         share_index    = idx + 1
@@ -18,10 +18,10 @@ locals {
 }
 
 resource "azurerm_monitor_metric_alert" "volumeconsumed" {
-  for_each            = { for item in local.alert_combinations : item.key => item }
+  for_each            = var.fileshare_monitoring.enabled ? { for item in local.alert_combinations : item.key => item } : {}
   name                = "alr-dev-volumeconsumed${each.value.percentage}-fileshare-ai-metric-warn-pcms-${format("%02d", each.value.share_index)}"
   resource_group_name = azurerm_resource_group.filealert.name
-  scopes              = ["${var.storage_account_id}/fileServices/default"]
+  scopes              = ["${var.fileshare_monitoring.storage_account_id}/fileServices/default"]
   description         = "Triggers alert when volume consumed size of ${each.value.share_name} exceeds ${each.value.percentage}%."
   severity            = 2
   window_size         = "PT1H"
@@ -32,7 +32,7 @@ resource "azurerm_monitor_metric_alert" "volumeconsumed" {
     metric_name      = "FileCapacity"
     aggregation      = "Average"
     operator         = "GreaterThan"
-    threshold        = local.shareQuota * 1073741824 * each.value.threshold_mult
+    threshold        = var.fileshare_monitoring.share_quota * 1073741824 * each.value.threshold_mult
 
     dimension {
       name     = "FileShare"
