@@ -12,6 +12,7 @@ variable "fileshare_monitoring" {
     share_names          = list(string)
     share_quota          = number
     thresholds           = list(number)
+    resource_group_name  = string
   })
   default = {
     enabled              = false
@@ -20,6 +21,7 @@ variable "fileshare_monitoring" {
     share_names          = []
     share_quota          = 100 # in GiB
     thresholds           = []
+    resource_group_name  = ""
   }
 }
 
@@ -32,11 +34,13 @@ variable "netapp_monitoring" {
       volume_name  = string
       volume_quota = number # in GiB
     }))
-    thresholds = list(number)
+    thresholds          = list(number)
+    resource_group_name = string
   })
   default = {
-    enabled        = false
-    netapp_volumes = []
-    thresholds     = []
+    enabled             = false
+    netapp_volumes      = []
+    thresholds          = []
+    resource_group_name = ""
   }
 }

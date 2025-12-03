@@ -44,7 +44,7 @@ locals {
 resource "azurerm_monitor_metric_alert" "fileshare_volumeconsumed" {
   for_each            = var.fileshare_monitoring.enabled ? { for item in local.fileshare_alert_combinations : item.key => item } : {}
   name                = "alr-dev-volumeconsumed${each.value.percentage}-fileshare-ai-metric-warn-pcms-${format("%02d", each.value.share_index)}"
-  resource_group_name = azurerm_resource_group.filealert.name
+  resource_group_name = var.fileshare_monitoring.resource_group_name
   scopes              = ["${var.fileshare_monitoring.storage_account_id}/fileServices/default"]
   description         = "Triggers alert when volume consumed size of ${each.value.share_name} exceeds ${each.value.percentage}%."
   severity            = 2
@@ -82,7 +82,7 @@ resource "azurerm_monitor_metric_alert" "fileshare_volumeconsumed" {
 resource "azurerm_monitor_metric_alert" "netapp_volumeconsumed" {
   for_each            = var.netapp_monitoring.enabled ? { for item in local.netapp_alert_combinations : item.key => item } : {}
   name                = "alr-dev-volumeconsumed${each.value.percentage}-netapp-ai-metric-warn-pcms-${format("%02d", each.value.volume_index)}"
-  resource_group_name = split("/", each.value.volume_id)[4] # Extract RG from volume ID
+  resource_group_name = var.netapp_monitoring.resource_group_name
   scopes              = [each.value.volume_id]
   description         = "Triggers alert when volume consumed size of ${each.value.volume_name} exceeds ${each.value.percentage}%."
   severity            = 2
