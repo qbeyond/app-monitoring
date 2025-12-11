@@ -11,8 +11,9 @@ variable "fileshare_monitoring" {
     storage_account_id   = string
     share_names          = list(string)
     share_quota          = number
-    thresholds           = list(number)
+    thresholds           = map(number)
     resource_group_name  = string
+    default_severity     = number
   })
   default = {
     enabled              = false
@@ -20,8 +21,9 @@ variable "fileshare_monitoring" {
     storage_account_id   = ""
     share_names          = []
     share_quota          = 100 # in GiB
-    thresholds           = []
+    thresholds           = {}
     resource_group_name  = ""
+    default_severity     = 2
   }
 }
 
@@ -34,13 +36,15 @@ variable "netapp_monitoring" {
       volume_name  = string
       volume_quota = number # in GiB
     }))
-    thresholds          = list(number)
+    thresholds          = map(number)
     resource_group_name = string
+    default_severity    = number
   })
   default = {
     enabled             = false
     netapp_volumes      = []
-    thresholds          = []
+    thresholds          = {}
     resource_group_name = ""
+    default_severity    = 2
   }
 }
