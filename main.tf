@@ -1,6 +1,3 @@
-data "azurerm_subscription" "current" {
-}
-
 module "alerts" {
   source = "./alerts"
 
