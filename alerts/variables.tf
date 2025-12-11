@@ -13,6 +13,7 @@ variable "fileshare_monitoring" {
     share_quota          = number
     thresholds           = map(number)
     resource_group_name  = string
+    default_severity     = number
   })
   default = {
     enabled              = false
@@ -22,6 +23,7 @@ variable "fileshare_monitoring" {
     share_quota          = 100
     thresholds           = {}
     resource_group_name  = ""
+    default_severity     = 2
   }
 }
 
@@ -36,11 +38,13 @@ variable "netapp_monitoring" {
     }))
     thresholds          = map(number)
     resource_group_name = string
+    default_severity    = number
   })
   default = {
     enabled             = false
     netapp_volumes      = []
     thresholds          = {}
     resource_group_name = ""
+    default_severity    = 2
   }
 }

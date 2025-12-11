@@ -20,7 +20,7 @@ locals {
         share_name     = share_name
         percentage     = tonumber(threshold_str)
         threshold_mult = threshold_data.threshold_value
-        severity_group = threshold_data.severity_group
+        severity_group = threshold_data.severity_group != null ? threshold_data.severity_group : var.fileshare_monitoring.default_severity
       }
     ]
   ])
@@ -43,7 +43,7 @@ locals {
         volume_quota   = volume.volume_quota
         percentage     = tonumber(threshold_str)
         threshold_mult = threshold_data.threshold_value
-        severity_group = threshold_data.severity_group
+        severity_group = threshold_data.severity_group != null ? threshold_data.severity_group : var.netapp_monitoring.default_severity
       }
     ]
   ])
