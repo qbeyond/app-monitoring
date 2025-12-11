@@ -4,7 +4,7 @@ resource "azurerm_monitor_metric_alert" "fileshare_volumeconsumed" {
   resource_group_name = var.fileshare_monitoring.resource_group_name
   scopes              = ["${var.fileshare_monitoring.storage_account_id}/fileServices/default"]
   description         = "Triggers alert when volume consumed size of ${each.value.share_name} exceeds ${each.value.percentage}%."
-  severity            = 2
+  severity            = each.value.severity_group
   window_size         = "PT1H"
   tags                = local.tags
 

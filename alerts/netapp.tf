@@ -4,7 +4,7 @@ resource "azurerm_monitor_metric_alert" "netapp_volumeconsumed" {
   resource_group_name = var.netapp_monitoring.resource_group_name
   scopes              = [each.value.volume_id]
   description         = "Triggers alert when volume consumed size of ${each.value.volume_name} exceeds ${each.value.percentage}%."
-  severity            = 2
+  severity            = each.value.severity_group
   window_size         = "PT1H"
   tags                = local.tags
 
